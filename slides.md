@@ -28,8 +28,8 @@ transition: slide-left
 
 <v-clicks>
 
-- Software Engineer & Technologist (which is apparently a real thing)
-- Love making weird little art projects both virtual & physical
+- Software Engineer & Creative Technologist 
+- Love making weird little tech art projects 
 - Why I can be slightly believed:
   - Led data analysis for large industrial decarbonisation projects
   - Developer in different AI start-ups ranging from CCTV Object Recognition to Wind-Turbine Timseries Modelling
@@ -127,33 +127,6 @@ image: ./assets/pokedex_image.png
 - Snarky commentary included as extra!
 
 </v-clicks>
-
----
-layout: center
-class: text-center
----
-# Big Statistics
-
-<div class="grid grid-cols-3 gap-8 mt-8">
-  <div class="stat text-center p-4 bg-purple-800 rounded-xl shadow-xl shadow-purple-800/20">
-    <div class="stat-title font-bold">Total Capacity Lost</div>
-    <div class="stat-value font-italic mb-4">6,584 MW</div>
-    <div class="stat-desc">Since January 2022</div>
-  </div>
-
-  <div class="stat text-center p-4 bg-blue-800 rounded-xl shadow-xl shadow-purple-800/20">
-    <div class="stat-title font-bold">Cancelled Projects</div>
-    <div class="stat-value font-italic mb-4">348</div>
-    <div class="stat-desc">Since January 2020</div>
-  </div>
-
-  <div class="stat text-center p-4 bg-purple-800 rounded-xl shadow-xl shadow-purple-800/20">
-    <div class="stat-title font-bold">Alan Tichmarsh</div>
-    <div class="stat-value font-italic mb-4">Constant</div>
-    <div class="stat-desc">Fabled BBC Presenter a common pattern in cancelled projects</div>
-  </div>
-</div>
-
 ---
 ---
 # The Tech Stack 🔨
@@ -225,10 +198,6 @@ graph TD
 layout: statement
 ---
 
-
-
-
-
 # Live Demo
 
 <div>
@@ -236,342 +205,6 @@ layout: statement
 <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGpsdnBqYW9jZGtseHhoOWI2a3lvZnFxM3Q3ejF0aTIwbmdxbHF5NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3ohhwgmWRebr8jTO24/giphy.gif" class="h-70 rounded shadow" />
 </div>
 </div>
----
-layout: two-cols
----
-
-# Backend Flow: From Boring Government Data to NimbyDar
-
-<v-clicks>
-
-1. Load cancelled project data from REPD Spreadsheet
-2. Convert to GeoJSON with coordinates
-3. For each cancelled project:
-   - Search for data & articles based on REPD meta (Google API)
-   - Scrape article content 
-   - Feed to Gemini AI
-   - Generate NIMBY analysis
-
-
-</v-clicks>
-
-::right::
-
-````md magic-move {lines: true}
-```python{*}{maxHeight:'450px'}
-df = repd.get_repd_dataframe()
-for _, row in df.iterrows():
-    string = f"{row['Site Name']}"
-    query_res = repd.search_query(string)
-    if query_res:
-        url = query_res[0]["link"] 
-        content = scrape.scrape_content(url)
-        ai = scrape.gemini_process(content)
-        new_text = ai.text.replace("json", "")
-        new_text = new_text.replace("```", "")
-
-        object = json.loads(new_text)
-        ref_id = row['Ref ID']
-        object['refid'] = ref_id
-        object['article_url'] = url
-        nimby_scores.append(object)    
-
-        with open("nimby_score.json", 
-        "w", encoding="utf-8") as f: 
-            json.dump(nimby_scores, f)
-```
-```python{*}{maxHeight:'450px'}
-df = repd.get_repd_dataframe()
-for _, row in df.iterrows():
-    string = f"{row['Site Name']}"
-    query_res = repd.search_query(string)
-    if query_res:
-        url = query_res[0]["link"] 
-        mime = 'n/a'
-        if query_res[0].get('mime'):
-            mime = query_res[0]['mime']
-        content = scrape.scrape_content(url,
-         mime=mime)
-        ai = scrape.gemini_process(content)
-        new_text = ai.text.replace("json", "")
-        new_text = new_text.replace("```", "")
-
-        object = json.loads(new_text)
-        ref_id = row['Ref ID']
-        object['refid'] = ref_id
-        object['article_url'] = url
-        nimby_scores.append(object)    
-
-        with open("nimby_score.json", 
-        "w", encoding="utf-8") as f: 
-            json.dump(nimby_scores, f)
-```
-```python{*}{maxHeight:'450px'}
-if os.path.exists("nimby_score.json"):
-    with open("nimby_score.json", "r", 
-    encoding="utf-8") as f:
-        try:
-            for n in json.load(f):
-                nimby_scores.append(n)
-        except json.JSONDecodeError:
-            pass
-
-df = repd.get_repd_dataframe()
-for _, row in df.iterrows():
-    string = f"{row['Site Name']}"
-    query_res = repd.search_query(string)
-    if query_res:
-        url = query_res[0]["link"] 
-        mime = 'n/a'
-        if query_res[0].get('mime'):
-            mime = query_res[0]['mime']
-        content = scrape.scrape_content(url,
-         mime=mime)
-        ai = scrape.gemini_process(content)
-        new_text = ai.text.replace("json", "")
-        new_text = new_text.replace("```", "")
-
-        object = json.loads(new_text)
-        ref_id = row['Ref ID']
-        object['refid'] = ref_id
-        object['article_url'] = url
-        nimby_scores.append(object)    
-
-        with open("nimby_score.json", 
-        "w", encoding="utf-8") as f: 
-            json.dump(nimby_scores, f)
-```
-```python{*}{maxHeight:'450px'}
-if os.path.exists("nimby_score.json"):
-    with open("nimby_score.json", "r", 
-    encoding="utf-8") as f:
-        try:
-            for n in json.load(f):
-                nimby_scores.append(n)
-        except json.JSONDecodeError:
-            pass
-
-for _, row in df.iloc[start_row:].iterrows():
-    string = f"{row['Site Name']}, 
-    {row['Planning Authority']} "
-    query_res = repd.search_query(string)
-    if query_res:
-        url = query_res[0]["link"] 
-        mime = 'n/a'
-        if query_res[0].get('mime'):
-            mime = query_res[0]['mime']
-        content = scrape.scrape_content(url, mime=mime)
-        if content == None:
-            next
-        else:
-            ai = scrape.gemini_process(content)
-            new_text = ai.text.replace("json", "")
-            new_text = new_text.replace("```", "")
-            try:
-                object = json.loads(new_text)
-                ref_id = row['Ref ID']
-                object['refid'] = ref_id
-                object['article_url'] = url
-                nimby_scores.append(object)    
-            except Exception as e:
-                next
-            with open("nimby_score.json", "w", 
-            encoding="utf-8") as f: 
-                json.dump(nimby_scores, f, 
-                ensure_ascii=False, indent=4)
-```
-````
----
-layout: two-cols
----
-
-# Gemini API Flow
-<div class='text-xs'>
-<v-clicks>
-
-1. Gemini has great Python API
-2. 2.0 Flash for it's massive context length (1 Million) 
-
-- What are the main config params?
-  - `temperature` 
-    - Creativity dial
-    - Higher for more risks, 1.5 to make it funnier
-  - `top_p` 
-    - Pool of words from which the LLM can consider each step
-    - Percentage value of likeliest token from probability distribution
-    - 0.95 refers to tokens who's combined likelihood surpases 95%
-  - `top_k`
-    - Limits selection of tokens from `top_p` based on probability
-    - Restricts to top 40 most likely options
-</v-clicks>
-</div>
-::right::
-
-```python {1-7|7-24|all}
-  generation_config = {
-    "temperature": 1.5,
-    "top_p": 0.95,
-    "top_k": 40,
-    "max_output_tokens": 8192,
-    "response_mime_type": "text/plain",
-  }
-
-  def gemini_process(content, prompt="data/nimby_prompt.txt"):
-    prompt_filepath = "data/nimby_prompt.txt"  # Adjust the path if needed
-    nimby_radar_prompt = load_prompt(prompt_filepath)
-
-    model = genai.GenerativeModel(
-    model_name="gemini-2.0-flash",
-    generation_config=generation_config,
-    )
-    
-    chat_session = model.start_chat(
-    history=[      {
-            "role": "user",  # or "model" if it was a prior model response
-            "parts": [nimby_radar_prompt]
-        }])
-    response = chat_session.send_message(content)
-    return response
-```
-
-
----
-
-# The Prompting: NIMBYdar Scoring 
-
-<div grid="~ cols-2 gap-4">
-<div>
-
-<v-clicks>
-
-- 5 key metrics:
-  - NIMBY Score (+)
-  - Accuracy (++)
-  - Petty (+++)
-  - Organized (--)
-  - Political Leaning (+)
-- Progressively Larger and Larger Prompt
-- Have to keep reminding Gemini to output in JSON
-
-- Trying to not make it hate humanity, nature and children's hospitals is hardest part.
-
-</v-clicks>
-
-</div>
-<div>
-<div class="flex justify-center h-full items-center">
-<img src="./assets/AImeme.webp" class="h-100 rounded shadow" />
-</div>
-</div>
-</div>
-
----
-
-# Frontend: First Svelte Experience
-
-<div grid="~ cols-2 gap-4">
-<div>
-````md magic-move 
-```javascript 
-// - Hardest Part was integrating 
-// Tailwindcss + daisyUI
-// - Svelte data loading is pristine
-// - Far easier to do javascript & reactivity
-//+page.svelte
-<script>
-  import Map from '$lib/Map.svelte';
-  export let data;
-</script>  
-
-<Map points={data.points} 
-nimby_score={data.nimby_score}/>
-```
-```javascript 
-//+page.js
-export async function load({ fetch }) {
-    try {
-      const response = await fetch('/points.geojson'); 
-      const nimby_r = await fetch('/nimby_score.json');  
-
-      const geojson = await response.json();
-      const nimby_score = await nimby_r.json();
-      
-      return {
-        points: geojson.features,
-        nimby_score: nimby_score
-      };
-    } catch (error) {
-      console.error('Error loading GeoJSON:', error);
-      return {
-        points: []
-      };
-    }
-  }
-```
-
-```javascript
-### LOOK AT HOW CLEAN THIS LOOKS
-#### I HATE REACT I HATE REACT I HATE REACT
-
-// components/Map.svelte
-<div class="grid grid-cols-2 gap-4" 
-class:hidden={selectedFeature}>
-    {#each stats as stat}
-        <div class="stat shadow bg-base-100">
-            <div class="stat-title">{stat.label}</div>
-            <span class="stat-value">{stat.value}</span>
-            <span class="stat-desc">{stat.trend}</span>
-        </div>
-    {/each}
-</div>
-```
-
-````
-
-</div>
-<div>
-<img src="./assets/svelte_bf.webp" class="h-100 rounded shadow" />
-</div>
-</div>
-
----
-
-
-# Challenges 
-
-<v-clicks>
-
-- MapGL Filtering is a labyrinth
-- Dealing with massive PDF documents (even gemini can't deal with the pointless context length of council minutea)
-- Google Search API rate limits
-- Gemini sometimes getting too sassy with commentary
-</v-clicks>
-
-```js {*}{maxHeight:'250px'}
-const accuracy1 = nimby_score.filter(item => item['Accuracy Score'] >= 70)
-const accuracy2 = nimby_score.filter(item => item['Accuracy Score'] < 70)
-
-const nimbyRefIds = new Set(accuracy1.map(item => item.refid || ''));
-const nimbyRefIds2 = new Set(accuracy2.map(item => item.refid || ''));
-
-// You expect me to believe this is logical?
-'circle-color': [
-    'case',
-    ['boolean', ['feature-state', 'selected'], false],
-    '#fbb03b',  
-    [
-        'case',
-        ['in', ['get', refProperty], ['literal', [...nimbyRefIds]]],
-        '#a8323a',  
-        [
-        'case',    
-            ['in', ['get', refProperty], ['literal', [...nimbyRefIds2]]],
-            '#ffa000',
-            '#d3d3d3'   
-        ]
-    ]
-],
-```
 
 
 ---
@@ -582,13 +215,12 @@ layout: two-cols
 
 <v-clicks>
 
-- Gemini may be runt of the LLM litter but the API is great.
+- Gemini may be <s>runt</s> of the LLM litter but the API is great.
 - Pros:
   - Generous free tier (perfect for side projects)
   - Fast API response times
   - Excellent Python SDK integration
-- Limited model fine-tuning needed - prompt engineering was enough
-- gemini.google.com allowed me to test naive data with search API for early validation 
+- gemini.google.com allowed me to test naive data with search API for early validation. 
 </v-clicks>
 
 ::right::
@@ -599,7 +231,7 @@ layout: two-cols
 </div>
 ---
 
-# NIMBYdar In Action: The Good
+# The Good
 <div class='text-sm'>
 
 <v-clicks>
@@ -674,23 +306,6 @@ For shame!"
 </div>
 </div>
 
----
-layout: center
----
-
-# Kryptonite of Gemini API  - Massive PDFs
-
-<v-clicks>
-
-- Gemini has 1 mil token context length
-  - Plenty to deal with PDFs
-- But API Costing is finite 
-- Integrating scrape limits on articles works nicely
-- *BUT*
-- PDFs tend to be massive council minutes filled with irrevelant information
-- Need to work out a better parsing method for large minutes.
-- Otherwise wallet will be hit severely 
-</v-clicks>
 
 
 ---
@@ -702,15 +317,13 @@ layout: two-cols
 <v-clicks>
 
 - Additional Agentic Analysis for results of Search API
-  - Use Gemini for parsing best available search found
-  - Gemini Developer great for testing concepts
-- Calculate carbon impact of each cancelled project
-- Allow users to submit actual articles when gemini gets it wrong
+<!-- - Calculate carbon impact of each cancelled project -->
+- Allow users to submit articles when Gemini gets it wrong
 - Create "NIMBY trainer" for counter organizing against complaints
   - make alan tichmarsh a legendary nimbymon
-- Social media integrations
 - Alert at projects in your area in progress to support
 
+<!-- - Social media integrations -->
 
 </v-clicks>
 
@@ -737,7 +350,7 @@ class: "text-center"
 ---
 
 # Thanks for listening!
-## Total Project Cost - £0.0.0.0
+## Total Project Cost - £0.70
 
 <div class="mt-12">
 
@@ -747,7 +360,7 @@ Live version: [nimby.bemben.co.uk](nimby.bemben.co.uk)
 
 **next project - the AI congress (how fast does it kill everyone)**
 
-Substack For Slides & More Fun Stuff (And to buy me a coffee)
+Substack For Slides & More Fun Stuff 
 <div class="flex justify-center h-full items-center">
   <img src="./assets/qr-code.png" class="h-50 rounded shadow" />
 </div>
