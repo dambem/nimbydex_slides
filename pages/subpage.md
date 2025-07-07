@@ -4,6 +4,28 @@ layout: center
 class: text-center
 ---
 # Big Statistics
+
+<div class="grid grid-cols-3 gap-8 mt-8">
+  <div class="stat text-center p-4 bg-purple-800 rounded-xl shadow-xl shadow-purple-800/20">
+    <div class="stat-title font-bold">Total Capacity Lost</div>
+    <div class="stat-value font-italic mb-4">6,584 MW</div>
+    <div class="stat-desc">Since January 2022</div>
+  </div>
+
+  <div class="stat text-center p-4 bg-blue-800 rounded-xl shadow-xl shadow-purple-800/20">
+    <div class="stat-title font-bold"> Average Days Before Cancellation </div>
+    <div class="stat-value font-italic mb-4">334</div>
+  </div>
+
+  <div class="stat text-center p-4 bg-purple-800 rounded-xl shadow-xl shadow-purple-800/20">
+    <div class="stat-title font-bold">Alan Tichmarsh</div>
+    <div class="stat-value font-italic mb-4">Constant</div>
+    <div class="stat-desc">Fabled BBC Presenter a common pattern in cancelled projects</div>
+  </div>
+</div>
+
+
+
 ---
 ---
 
@@ -129,4 +151,66 @@ const nimbyRefIds2 = new Set(accuracy2.map(item => item.refid || ''));
     ]
 ],
 ```
+---
+# The Tech Stack 🔨
+
+<v-clicks>
+
+### Backend
+- Pandas for Data Processing
+- Google Search API for document retrieval 
+- Beautiful Soup For scraping *ethicallly*
+- Gemini AI API for snarky analysis
+- MarkItDown for PDF, HTML, DOCX to MD conversion
+
+### Frontend
+- Vite & Svelte for fast web-app dev
+- MapLibre GL for fancy maps
+- Chart.js for radar diagrams
+- GSAP for smooth animations
+- Tailwind CSS for styling
+
+### Hosting
+- Vercel for hurting my wallet
+
+</v-clicks>
+
+<div class="h-100 flex items-center">
+```mermaid {theme: 'neutral', scale: 0.55}
+graph TD
+    %% Main data source
+    A[REPD Dataset] --> B[Python Data Processing Pipeline]
+    
+    %% Python processing scope
+    subgraph Backend["Python Data Processing"]
+        B --> C[GeoJSON Generation]
+        B --> E[Google Search API Integration]
+        E --> F[Beautiful Soup & Context Limitation]
+        F --> G[Gemini AI NimbyDar Generation]
+    end
+    
+    %% Frontend implementation
+    subgraph Frontend["Vite + Svelte Application"]
+        H[Svelte Components] --> I[MapLibre Integration]
+    end
+    
+    %% Data flow from backend to frontend
+    C --> H
+    G --> H
+    
+    %% Deployment
+    Frontend --> M[Vercel Deployment]
+    
+    %% Styling
+    classDef primary fill:#fe0ff,stroke:#3f0ff,stroke-width:2px
+    classDef secondary fill:#ff0f0,stroke:#666666,stroke-width:2px
+    classDef deployment fill:#fffe0,stroke:#fff80,stroke-width:2px
+    
+    class A,B primary
+    class Backend,Frontend secondary
+    class M deployment
+```
+
+</div>
+
 
