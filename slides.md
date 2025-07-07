@@ -340,7 +340,82 @@ The set-up for Nimbydex V1 was simple - and quickly became crazy.
 - Allows for cleaner development.
 
 </v-clicks>
+---
 
+# Model Context Protocol - Is It Hard To Do?
+<v-clicks>
+
+````md magic-move
+
+```python 
+from fastapi import FastAPI
+from funcs.scrape_and_analyse import scrape_content, gemini_process
+
+app = FastAPI()
+
+@app.post("/process-gemini")
+def post_scrape_content(url: str, mime: str) -> str:
+    """Scrape Content - Scrapes content into a maximum character limit with specific actions based on mimetypes.
+    Args:
+        url (str): URL of content to scrape
+        mime (str): MimeType of Content To Scrape
+    Returns:
+        str: Scraped content as string.
+    """
+    return scrape_content(url, mime)
+
+```
+
+```python 
+from fastapi import FastAPI
+from funcs.scrape_and_analyse import scrape_content, gemini_process
+from fastmcp import FastMCP
+
+mcp = FastMCP("NimbyDex")
+mcp_app = mcp.http_app(path='/mcp')
+
+app = FastAPI()
+app.mount("/mcp-server", mcp_app, "mcp")
+
+@app.post("/process-gemini")
+def post_scrape_content(url: str, mime: str) -> str:
+    """Scrape Content - Scrapes content into a maximum character limit with specific actions based on mimetypes.
+    Args:
+        url (str): URL of content to scrape
+        mime (str): MimeType of Content To Scrape
+    Returns:
+        str: Scraped content as string.
+    """
+    return scrape_content(url, mime)
+
+```
+```python 
+from fastapi import FastAPI
+from funcs.scrape_and_analyse import scrape_content, gemini_process
+from fastmcp import FastMCP
+
+mcp = FastMCP("NimbyDex")
+mcp_app = mcp.http_app(path='/mcp')
+
+app = FastAPI()
+app.mount("/mcp-server", mcp_app, "mcp")
+
+@mcp.tool()
+def post_scrape_content(url: str, mime: str) -> str:
+    """Scrape Content - Scrapes content into a maximum character limit with specific actions based on mimetypes.
+    Args:
+        url (str): URL of content to scrape
+        mime (str): MimeType of Content To Scrape
+    Returns:
+        str: Scraped content as string.
+    """
+    return scrape_content(url, mime)
+
+```
+````
+
+No - As long as you don't care about security 
+</v-clicks>
 ---
 
 # Tech Stack With MCP (TBD)
